@@ -8,7 +8,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mcqueide.cursoudemyspringjava8.PessoaRepository;
+import com.mcqueide.cursoudemyspringjava8.dto.TelefoneDto;
+import com.mcqueide.cursoudemyspringjava8.repository.PessoaRepository;
 import com.mcqueide.cursoudemyspringjava8.dto.PessoaDto;
 import com.mcqueide.cursoudemyspringjava8.modelo.Pessoa;
 
@@ -28,7 +29,17 @@ public class PessoaServico {
 	
 	private static PessoaDto converte(Pessoa pessoa) {
 		PessoaDto dto = new PessoaDto();
-		BeanUtils.copyProperties(pessoa, dto);
+
+        BeanUtils.copyProperties(pessoa, dto);
+        dto.getTelefones().clear();
+
+        pessoa.getTelefones().forEach(t -> {
+            TelefoneDto telefoneDto = new TelefoneDto();
+            BeanUtils.copyProperties(t, telefoneDto);
+
+            dto.getTelefones().add(telefoneDto);
+        });
+
 		return dto;
 	}
 	

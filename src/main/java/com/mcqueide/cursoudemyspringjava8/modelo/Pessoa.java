@@ -5,20 +5,25 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Entity
+@Table(name = "pessoa")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Pessoa {
 
 	@Id
@@ -30,7 +35,6 @@ public class Pessoa {
 	@Column(name="data_nascimento")
 	private LocalDate dataNascimento;
 	
-	@OneToMany(mappedBy="pessoa", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="pessoa", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Telefone> telefones;
-	
 }
