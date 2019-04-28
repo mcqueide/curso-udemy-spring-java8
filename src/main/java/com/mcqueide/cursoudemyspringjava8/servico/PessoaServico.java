@@ -4,14 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mcqueide.cursoudemyspringjava8.dto.TelefoneDto;
-import com.mcqueide.cursoudemyspringjava8.repository.PessoaRepository;
 import com.mcqueide.cursoudemyspringjava8.dto.PessoaDto;
-import com.mcqueide.cursoudemyspringjava8.modelo.Pessoa;
+import com.mcqueide.cursoudemyspringjava8.repository.PessoaRepository;
+import com.mcqueide.cursoudemyspringjava8.util.Conversor;
 
 @Service
 public class PessoaServico {
@@ -19,28 +17,15 @@ public class PessoaServico {
 	@Autowired
 	private PessoaRepository repository;
 	
+	@Autowired
+	private Conversor conversor;
+	
 	public Optional<PessoaDto> obtemPessoa(Integer id) {
-		return repository.findById(id).map(PessoaServico::converte);
+		return repository.findById(id).map(p -> conversor.converter(p, PessoaDto.class));
 	}
 	
 	public List<PessoaDto> obtemPessoas() {
-		return repository.findAll().stream().map(PessoaServico::converte).collect(Collectors.toList());
-	}
-	
-	private static PessoaDto converte(Pessoa pessoa) {
-		PessoaDto dto = new PessoaDto();
-
-        BeanUtils.copyProperties(pessoa, dto);
-        dto.getTelefones().clear();
-
-        pessoa.getTelefones().forEach(t -> {
-            TelefoneDto telefoneDto = new TelefoneDto();
-            BeanUtils.copyProperties(t, telefoneDto);
-
-            dto.getTelefones().add(telefoneDto);
-        });
-
-		return dto;
+		return repository.findAll().stream().map(p -> conversor.converter(p, PessoaDto.class)).collect(Collectors.toList());
 	}
 	
 }

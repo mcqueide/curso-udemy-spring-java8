@@ -1,7 +1,14 @@
 package com.mcqueide.cursoudemyspringjava8;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.dozer.DozerBeanMapper;
+import org.dozer.Mapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 
 @SpringBootApplication
 public class Aplicacao {
@@ -9,5 +16,16 @@ public class Aplicacao {
 	public static void main(String[] args) {
 		SpringApplication.run(Aplicacao.class, args);
 	}
+	
+	@Bean
+	@Scope("singleton")
+	public Mapper produceMapper(){
+        List<String> mappingFiles = new ArrayList<>();
+        mappingFiles.add("dozerJdk8Converters.xml");
+
+        DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
+        dozerBeanMapper.setMappingFiles(mappingFiles);
+        return dozerBeanMapper;
+    }
 
 }
