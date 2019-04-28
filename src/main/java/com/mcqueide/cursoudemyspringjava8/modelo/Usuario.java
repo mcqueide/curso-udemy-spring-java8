@@ -1,48 +1,47 @@
 package com.mcqueide.cursoudemyspringjava8.modelo;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "pessoa")
+@Table(name = "usuario")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Builder
-public class Pessoa {
-
+public class Usuario {
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
 	
-	private String nome;
+	private String login;
 	
-	@Column(name="data_nascimento")
-	private LocalDate dataNascimento;
+	private String email;
 	
-	@OneToMany(mappedBy="pessoa", cascade=CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<Telefone> telefones;
+	private String senha;
 	
-	@OneToOne
-	@JoinColumn(name = "usuario_id", referencedColumnName = "id")
-	private Usuario usuario;
+	@OneToOne(mappedBy = "usuario")
+	private Pessoa pessoa;
+	
+	@OneToMany(mappedBy = "usuario")
+	private List<UsuarioPerfil> usuarioPerfis;
+	
+	public List<Perfil> getPerfis() {
+		return usuarioPerfis.stream().map(up -> up.getPerfil()).collect(Collectors.toList());
+	}
+
 }
